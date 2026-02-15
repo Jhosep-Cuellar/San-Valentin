@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz San Valentin 💖</title>
+
+<style>
+@import url('https://fonts.googleapis.com');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    background-color: #fff0f3;
+}
+
+#intro {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #ff8fa3 0%, #ffb3b3 100%);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    text-align: center;
+    cursor: pointer;
+    z-index: 2000;
+    padding: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+#contenido {
+    display: none; /* Tu JS lo cambia a flex */
+    position: fixed; /* Cambiado de relative a fixed para bloquearlo a la pantalla */
+    top: 0;
+    left: 0;
+    height: 100%; /* Usa el 100% real disponible */
+    width: 100%;
+    background: linear-gradient(135deg, #ffeef8 0%, #ffcccc 100%);
+    z-index: 1;
+    
+    /* CENTRADO ABSOLUTO */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    animation: fadeIn 2s ease-in-out;
+    position: relative;
+    z-index: 20;
+    width: 90%; 
+    max-width: 450px;
+    max-height: 80vh; 
+    padding: 25px 20px;
+    
+    /* Efecto de transparencia que pediste */
+    background: rgba(255, 255, 255, 0.6); 
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
+    
+    border-radius: 30px;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(231, 84, 128, 0.1);
+    
+    /* Asegura que no tenga márgenes que lo muevan */
+    margin: auto; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* Área del mensaje */
+.message {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+    line-height: 1.7;
+    color: #6b2d2d; /* Marrón rojizo para legibilidad */
+    text-align: justify; /* Contenido justificado */
+    overflow-y: auto;
+    width: 100%;
+    
+    /* Ocultar scrollbar en Chrome, Safari y Opera */
+    -webkit-overflow-scrolling: touch;
+}
+
+.message::-webkit-scrollbar {
+    display: none; /* Esto oculta el scroll en la mayoría de móviles */
+}
+
+/* Ocultar scrollbar en Firefox e IE */
+.message {
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+}
+
+/* Título Centrado */
+.message strong {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    display: block;
+    margin-bottom: 15px;
+    color: #d81b60;
+    line-height: 1.2;
+    text-align: center; /* Título siempre al centro */
+    text-transform: uppercase;
+}
+
+/* Edad Centrada */
+.age {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #e67e22;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center; /* Edad siempre al centro */
+    width: 100%;
+    display: block;
+}
+.highlight {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #e67e22; /* El mismo naranja de la edad */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 1.1rem; /* Un poco más grande para resaltar */
+}
+.mute-btn {
+    position: fixed;
+    bottom: 20px; /* Distancia desde abajo */
+    left: 20px;   /* Distancia desde la izquierda */
+    display: none; /* Se activa con tu JS al iniciar */
+    z-index: 3000; /* Por encima de todo */
+    
+    /* Estilo visual */
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #d81b60;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(216, 27, 96, 0.3);
+    border-radius: 50px; /* Forma de píldora */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    
+    /* Evitar que se seleccione el texto al tocar rápido */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.mute-btn:active {
+    transform: scale(0.9); /* Efecto de pulsación al tocarlo */
+    background: rgba(255, 255, 255, 1);
+}
+
+
+.heart, .sparkle {
+    position: fixed;
+    bottom: -10vh; /* Base inicial fuera de pantalla */
+    pointer-events: none;
+    z-index: 5; /* Pasan por detrás del container (que es 10) */
+    animation-name: floatUp;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+.besos-btn {
+    display: block;
+    margin: 25px auto 10px auto;
+    padding: 12px 25px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #fff;
+    background: #e67e22; /* El naranja de la edad */
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+}
+
+.besos-btn:active {
+    transform: scale(0.95);
+}
+
+/* Pantalla negra de la foto */
+#pantalla-beso {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 5000; /* La pantalla negra está en 5000 */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+#pantalla-beso img {
+    max-width: 90%;
+    max-height: 70vh;
+    border-radius: 15px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+}
+#pantalla-beso p {
+    color: white;
+    margin-top: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+}
+#pantalla-beso img {
+    max-width: 85%;
+    max-height: 65vh;
+    border-radius: 20px;
+    border: 4px solid #fff;
+    box-shadow: 0 0 50px rgba(255, 105, 180, 0.4); /* Brillo rosa */
+    /* Animación de entrada suave */
+    animation: zoomInBeso 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes zoomInBeso {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.besito-explosion {
+    position: fixed;
+    pointer-events: none;
+    z-index: 6000; /* Por encima de la pantalla negra */
+    font-size: 2rem;
+    animation: explotarBesos 2s ease-out forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
+
+
+@keyframes floatUp {
+    0% { 
+        transform: translateY(105vh) rotate(0deg) scale(0.5); 
+        opacity: 0; 
+    }
+    15% {
+        opacity: 0.2; /* Aparece gradualmente */
+    }
+    85% {
+        opacity: 0.2; /* Se mantiene visible casi todo el camino */
+    }
+    100% { 
+        /* Sube hasta -25vh para asegurar que salga por arriba completamente */
+        transform: translateY(-90vh) rotate(360deg) scale(1); 
+        opacity: 0; 
+    }
+}
+@keyframes explotarBesos {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        /* Se esparcen en ángulos aleatorios usando variables JS */
+        transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1.5);
+        opacity: 0;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- Pantalla inicial -->
+<div id="intro" onclick="iniciarExperiencia()">
+    Toca la pantalla para empezar<br>❤️
+</div>
+
+<!-- Contenido principal -->
+<div id="contenido">
+    <div class="container">
+        <div class="message">
+            <strong>Feliz San Valentín, mi amor</strong>
+            Mi princesa, sé que este es nuestro <span class="highlight">primer San Valentín</span> y aunque la distancia nos separe físicamente, quiero que sepas que mi corazón está contigo en cada momento.
+            <br><br>
+            Cada kilómetro que nos separa se vuelve insignificante cuando pienso en lo <span class="highlight">especial</span> que eres para mí. La distancia solo ha hecho que mis sentimientos por ti sean <span class="highlight">más fuertes</span> cada día.
+            <br><br>
+            Aunque no pueda abrazarte hoy, llevo tu <span class="highlight">sonrisa</span> en mi mente y tu <span class="highlight">voz</span> en mi corazón. Cada mensaje, cada "te amo" hace que valga la pena la espera.
+            <br><br>
+            La distancia es temporal, pero lo <span class="highlight">nuestro</span> es para siempre...
+            <br><br>
+            Pronto estaremos juntos, y este será solo el primero de muchos San Valentín que celebraremos. Te amo más de lo que las palabras pueden expresar.
+            <div class="age">Para Dana, mi primer y eterno San Valentín ❤️</div>
+            <button class="besos-btn" onclick="mostrarBeso()">Recibir besitos 💋</button>
+        </div>
+    </div>
+</div>
+<div id="pantalla-beso" onclick="ocultarBeso()">
+    <img src="beso.jpg" alt="Nuestro beso">
+    <p>¡Te amo mi princesa! ❤️</p>
+</div>
+<button class="mute-btn" onclick="toggleMute()">🔊</button>
+
+<audio id="musica" loop>
+    <source src="carryyou.mp3" type="audio/mpeg">
+</audio>
+<audio id="sonido-beso">
+    <source src="beso-efecto.mp3" type="audio/mpeg">
+</audio>
+<script>
+let musica = document.getElementById("musica");
+let isMuted = false;
+let heartInterval;
+
+function iniciarExperiencia() {
+    musica.play().catch(e => console.log("Audio play failed:", e));
+    document.getElementById("intro").style.opacity = "0";
+
+    setTimeout(() => {
+        document.getElementById("intro").style.display = "none";
+        document.getElementById("contenido").style.display = "flex";
+        document.querySelector(".mute-btn").style.display = "block";
+        lanzarCorazones();
+        // Iniciar bucle continuo de corazones
+        heartInterval = setInterval(lanzarCorazones, 4000);
+    }, 1500);
+}
+
+function toggleMute() {
+    if(!isMuted){
+        musica.muted = true;
+        document.querySelector(".mute-btn").innerText = "🔇";
+        isMuted = true;
+    } else {
+        musica.muted = false;
+        document.querySelector(".mute-btn").innerText = "🔊";
+        isMuted = false;
+    }
+}
+
+function lanzarCorazones() {
+    const emojis = ['❤️'];
+    
+    for(let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            let heart = document.createElement("div");
+            heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            heart.classList.add("heart");
+
+            // Posición horizontal aleatoria
+            heart.style.left = Math.random() * 95 + "vw";
+            
+            // Tamaño variable
+            const size = Math.random() * 20 + 20;
+            heart.style.fontSize = size + "px";
+            
+            // Duración y delay aleatorios
+            const duration = Math.random() * 4 + 8;
+            heart.style.animationDuration = duration + "s";
+            heart.style.animationDelay = Math.random() * 2 + "s";
+            
+            
+            document.body.appendChild(heart);
+
+            // Eliminar después de la animación
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.remove();
+                }
+            }, (duration + 2) * 10000);
+        }, i * 200);
+    }
+    
+    // for(let j = 0; j < 15; j++) {
+    //     setTimeout(() => {
+    //         let sparkle = document.createElement("div");
+    //         sparkle.innerHTML = '♥';
+    //         sparkle.classList.add("sparkle");
+    //         sparkle.style.left = Math.random() * 95 + "vw";
+    //         sparkle.style.fontSize = (Math.random() * 15 + 15) + "px";
+    //         sparkle.style.animationDuration = (Math.random() * 3 + 5) + "s";
+    //         document.body.appendChild(sparkle);
+            
+    //         setTimeout(() => {
+    //             if (sparkle.parentNode) {
+    //                 sparkle.remove();
+    //             }
+    //         }, 10000);
+    //     }, j * 300);
+    // }
+}
+function mostrarBeso() {
+    const pantalla = document.getElementById("pantalla-beso");
+    const audioBeso = document.getElementById("sonido-beso");
+
+    // 1. Mostrar pantalla negra
+    pantalla.style.display = "flex";
+    
+    // 2. Reproducir sonido (reiniciándolo por si lo pulsa varias veces)
+    audioBeso.currentTime = 0;
+    audioBeso.play().catch(e => console.log("Error al sonar el beso:", e));
+
+    // 3. Crear la explosión de besitos (40 unidades)
+    for (let i = 0; i < 40; i++) {
+        crearBesitoExplosion();
+    }
+}
+function crearBesitoExplosion() {
+    const beso = document.createElement("div");
+    beso.innerHTML = "💋";
+    beso.classList.add("besito-explosion");
+    
+    // Posición inicial: Centro de la pantalla
+    beso.style.left = "50%";
+    beso.style.top = "50%";
+    
+    // Generar dirección aleatoria para la explosión
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 100 + Math.random() * 200; // Distancia que recorren
+    const tx = Math.cos(angle) * dist + "px";
+    const ty = Math.sin(angle) * dist + "px";
+    const rot = Math.random() * 360 + "deg";
+    
+    // Pasar variables al CSS
+    beso.style.setProperty('--tx', tx);
+    beso.style.setProperty('--ty', ty);
+    beso.style.setProperty('--rot', rot);
+    
+    document.body.appendChild(beso);
+    
+    // Limpiar el elemento después de la animación
+    setTimeout(() => {
+        beso.remove();
+    }, 2000);
+}
+function ocultarBeso() {
+    const pantalla = document.getElementById("pantalla-beso");
+    pantalla.style.display = "none";
+}
+// Limpiar intervalo al cerrar (opcional)
+window.addEventListener('beforeunload', () => {
+    if (heartInterval) clearInterval(heartInterval);
+});
+</script>
+
+</body>
+</html>
